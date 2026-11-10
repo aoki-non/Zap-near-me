@@ -1,6 +1,7 @@
 <template>
   <div class="scrim" @click.self="$emit('close')" @keydown.escape="$emit('close')">
     <section class="modal" role="dialog" aria-modal="true" aria-label="About this map">
+      <div class="sheet-handle mobile-only" aria-hidden="true"></div>
       <div class="row spread">
         <h2>About this map</h2>
         <button class="icon-btn" @click="$emit('close')" aria-label="Close about panel">✕</button>

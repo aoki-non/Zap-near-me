@@ -1,6 +1,7 @@
 <template>
   <div class="scrim" @click.self="$emit('close')" @keydown.escape="$emit('close')">
     <section class="modal" role="dialog" aria-modal="true" aria-label="Nimiq Pay Wallet">
+      <div class="sheet-handle mobile-only" aria-hidden="true"></div>
       <div class="row spread">
         <h2>Nimiq Pay Wallet</h2>
         <button class="icon-btn" @click="$emit('close')" aria-label="Close wallet modal">✕</button>
@@ -114,3 +115,4 @@ async function copyText(text: string, field: 'address' | 'url'): Promise<void> {
   }
 }
 </script>
+

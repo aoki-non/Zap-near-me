@@ -1,5 +1,7 @@
 <template>
   <section class="sheet" aria-label="Merchant details">
+    <div class="sheet-handle" aria-hidden="true"></div>
+
     <div v-if="loading">
       <h2>Loading merchant…</h2>
       <p class="meta">Fetching details from BTC Map.</p>

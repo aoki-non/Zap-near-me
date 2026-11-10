@@ -2,46 +2,101 @@
   <div class="app">
     <div class="map-wrap">
       <div id="map" aria-label="Merchant map"></div>
-      <div class="topbar">
-        <input
-          v-model="query" class="search" type="search" placeholder="Search merchants…"
-          aria-label="Search merchants by name" autocomplete="off"
-          @keydown.enter="runNameSearch"
-        />
-        <button class="icon-btn" :disabled="searching" aria-label="Search" @click="runNameSearch">⌕</button>
-        <button class="icon-btn" aria-label="Find merchants near me" title="Near me" @click="locate">◎</button>
-        <button
-          class="wallet-pill-btn"
-          :class="{ connected: nimiq.state.connected }"
-          aria-label="Nimiq Pay Wallet"
-          title="Nimiq Pay Wallet"
-          @click="walletOpen = true"
-        >
-          <span v-if="nimiq.state.connected">🟢 {{ nimiq.shortAddress.value }}</span>
-          <span v-else>⚡ Connect Pay</span>
-        </button>
-        <button class="icon-btn" aria-label="About this map" title="About" @click="aboutOpen = true">?</button>
-      </div>
+
+      <header class="topbar">
+        <div class="topbar-search-row">
+          <div class="search-wrap">
+            <input
+              v-model="query"
+              class="search"
+              type="search"
+              placeholder="Search merchants…"
+              aria-label="Search merchants by name"
+              autocomplete="off"
+              @keydown.enter="runNameSearch"
+            />
+            <button
+              v-if="query"
+              class="clear-btn"
+              aria-label="Clear search"
+              title="Clear"
+              @click="clearSearch"
+            >
+              ✕
+            </button>
+          </div>
+          <button
+            class="icon-btn"
+            :disabled="searching"
+            aria-label="Search"
+            title="Search"
+            @click="runNameSearch"
+          >
+            ⌕
+          </button>
+          <button
+            class="icon-btn"
+            aria-label="Find merchants near me"
+            title="Near me"
+            @click="locate"
+          >
+            ◎
+          </button>
+          <button
+            class="icon-btn"
+            aria-label="About this map"
+            title="About"
+            @click="aboutOpen = true"
+          >
+            ?
+          </button>
+        </div>
+
+        <div class="topbar-status-row">
+          <button
+            class="wallet-pill-btn"
+            :class="{ connected: nimiq.state.connected }"
+            aria-label="Nimiq Pay Wallet"
+            title="Nimiq Pay Wallet"
+            @click="walletOpen = true"
+          >
+            <span class="status-dot" :class="{ on: nimiq.state.connected }"></span>
+            <span v-if="nimiq.state.connected" class="wallet-text">
+              <strong>{{ nimiq.shortAddress.value }}</strong>
+              <span v-if="nimiq.formattedBalance.value" class="wallet-balance">
+                · {{ nimiq.formattedBalance.value }}
+              </span>
+            </span>
+            <span v-else class="wallet-text">⚡ Connect Nimiq Pay</span>
+          </button>
+        </div>
+      </header>
+
       <ul v-if="results.length > 0" class="results" aria-label="Search results">
         <li v-for="m in results" :key="m.id">
           <button @click="flyToMerchant(m)">
-            {{ m.name }}
-            <span v-if="m.verifiedPastYear">✓</span>
-            <span v-if="m.distanceM != null"> · {{ formatDistance(m.distanceM) }}</span>
+            <span class="result-name">{{ m.name }}</span>
+            <span v-if="m.verifiedPastYear" class="verified-tag">✓</span>
+            <span v-if="m.distanceM != null" class="result-dist"> · {{ formatDistance(m.distanceM) }}</span>
           </button>
         </li>
       </ul>
+
       <div v-if="banner" class="banner" :class="{ error: banner.error }" role="status">
         <span>{{ banner.text }}</span>
-        <button class="btn" @click="banner = null">Dismiss</button>
+        <button class="btn small" @click="banner = null">Dismiss</button>
       </div>
     </div>
 
     <MerchantSheet
       v-if="sheetOpen"
-      :merchant="selected" :loading="detailLoading" :error="detailError"
+      :merchant="selected"
+      :loading="detailLoading"
+      :error="detailError"
       :distance="selected && userPos ? formatDistance(haversineM(userPos.lat, userPos.lon, selected.lat, selected.lon)) : ''"
-      @close="sheetOpen = false" @retry="reloadDetail" @pay="payMerchant = $event"
+      @close="sheetOpen = false"
+      @retry="reloadDetail"
+      @pay="payMerchant = $event"
     />
 
     <PaySheet v-if="payMerchant" :merchant="payMerchant" @close="payMerchant = null" />
@@ -149,6 +204,11 @@ async function runNameSearch(): Promise<void> {
   } finally {
     searching.value = false
   }
+}
+
+function clearSearch(): void {
+  query.value = ''
+  results.value = []
 }
 
 function flyToMerchant(m: Merchant): void {
