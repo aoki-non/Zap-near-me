@@ -6,6 +6,28 @@
         <button class="icon-btn" @click="$emit('close')" aria-label="Close payment">✕</button>
       </div>
 
+      <!-- Live Wallet Connection Indicator -->
+      <div v-if="state.connected && state.activeAccount" class="wallet-pill-row">
+        <span class="badge on">
+          🟢 Nimiq Pay: {{ shortAddress }} ({{ formattedBalance ?? 'Connected' }})
+        </span>
+      </div>
+      <div v-else class="notice" role="status">
+        <div class="row spread">
+          <strong>⚡ Nimiq Pay Required</strong>
+          <span class="badge">{{ state.isChecking ? 'Checking…' : 'Browser Mode' }}</span>
+        </div>
+        <p class="muted">
+          To pay this merchant using NIM or USDT over Lightning, launch this Mini App inside
+          <strong>Nimiq Pay</strong>. Real on-chain and Lightning rails only.
+        </p>
+        <div class="btn-row" style="margin-top: 8px;">
+          <a :href="deepLink" class="btn pay" style="text-align: center; text-decoration: none;" target="_blank" rel="noopener">
+            🚀 Open in Nimiq Pay App
+          </a>
+        </div>
+      </div>
+
       <div v-if="phase === 'done' && result" class="notice ok" role="status">
         <strong>Payment submitted — awaiting settlement.</strong>
         <p class="muted">
@@ -21,6 +43,11 @@
         <p>{{ failure.message }}</p>
         <p v-if="failure.hash">Tx hash: <code>{{ failure.hash }}</code></p>
         <p v-if="failure.swapId">Swap ID: <code>{{ failure.swapId }}</code></p>
+        <div v-if="failure.kind === 'not-in-pay'" style="margin-top: 10px;">
+          <a :href="deepLink" class="btn pay" style="display: block; text-align: center; text-decoration: none;" target="_blank" rel="noopener">
+            🚀 Open in Nimiq Pay
+          </a>
+        </div>
       </div>
 
       <div v-if="phase === 'edit' || phase === 'failed'">
@@ -100,9 +127,12 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import type { Merchant } from '../lib/merchant'
 import { isMainnetBolt11, parsePaymentInput, resolveToInvoice, type ResolvedInvoice } from '../lib/lnurl'
 import { payInvoice, toPayFailure, type PayFailure, type SubmittedPayment } from '../lib/pay'
+import { useNimiq } from '../lib/nimiq'
 
 const props = defineProps<{ merchant: Merchant }>()
 defineEmits<{ (e: 'close'): void }>()
+
+const { state, shortAddress, formattedBalance, deepLink } = useNimiq()
 
 type Phase = 'edit' | 'review' | 'paying' | 'done' | 'failed'
 

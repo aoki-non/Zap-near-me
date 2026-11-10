@@ -217,3 +217,112 @@ button, input, textarea { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+
+/* --- Wallet Styles --- */
+.wallet-pill-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+.wallet-pill-btn:hover {
+  background: var(--bg-sunken);
+}
+.wallet-pill-btn.connected {
+  border-color: var(--verified);
+  background: var(--verified-bg);
+  color: var(--verified);
+  font-weight: 600;
+}
+.wallet-pill-row {
+  margin: var(--space-2) 0 var(--space-3);
+}
+.copy-box {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: var(--space-1) var(--space-2);
+}
+.copy-box code {
+  flex: 1;
+  font-size: 0.85rem;
+  word-break: break-all;
+  padding: var(--space-1);
+}
+.copy-input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  min-height: 36px !important;
+  padding: 0 var(--space-1) !important;
+  font-size: 0.82rem;
+}
+.btn.small {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  font-size: 0.82rem;
+}
+.full-width-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+  font-size: 1rem;
+  margin: var(--space-3) 0;
+}
+.balance-display {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.balance-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.fiat-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--text-muted);
+}
+.guide-steps {
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: var(--space-3) var(--space-4);
+  margin: var(--space-3) 0;
+}
+.guide-steps h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 0.95rem;
+}
+.guide-steps ol {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.guide-steps li {
+  margin-bottom: var(--space-1);
+}

@@ -10,6 +10,16 @@
         />
         <button class="icon-btn" :disabled="searching" aria-label="Search" @click="runNameSearch">⌕</button>
         <button class="icon-btn" aria-label="Find merchants near me" title="Near me" @click="locate">◎</button>
+        <button
+          class="wallet-pill-btn"
+          :class="{ connected: nimiq.state.connected }"
+          aria-label="Nimiq Pay Wallet"
+          title="Nimiq Pay Wallet"
+          @click="walletOpen = true"
+        >
+          <span v-if="nimiq.state.connected">🟢 {{ nimiq.shortAddress.value }}</span>
+          <span v-else>⚡ Connect Pay</span>
+        </button>
         <button class="icon-btn" aria-label="About this map" title="About" @click="aboutOpen = true">?</button>
       </div>
       <ul v-if="results.length > 0" class="results" aria-label="Search results">
@@ -35,6 +45,7 @@
     />
 
     <PaySheet v-if="payMerchant" :merchant="payMerchant" @close="payMerchant = null" />
+    <WalletModal v-if="walletOpen" @close="walletOpen = false" />
     <AboutPanel v-if="aboutOpen" @close="aboutOpen = false" />
   </div>
 </template>
@@ -45,13 +56,16 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import AboutPanel from './components/AboutPanel.vue'
 import MerchantSheet from './components/MerchantSheet.vue'
 import PaySheet from './components/PaySheet.vue'
+import WalletModal from './components/WalletModal.vue'
 import { fetchSnapshot, syncPlacesPage } from './lib/btcmap'
 import { createMap, markerFor } from './lib/map'
 import { formatDistance, haversineM, normalizeBtcMapPlace, type Merchant } from './lib/merchant'
+import { useNimiq } from './lib/nimiq'
 import { BtcMapSource } from './lib/sources'
 import { deletePlaces, getAllCachedPlaces, getSyncAnchor, setSyncAnchor, upsertPlaces } from './lib/store'
 
 const source = new BtcMapSource()
+const nimiq = useNimiq()
 const MAX_PINS = 2000
 
 let map: L.Map | null = null
@@ -72,6 +86,7 @@ const detailLoading = ref(false)
 const detailError = ref<string | null>(null)
 const payMerchant = ref<Merchant | null>(null)
 const aboutOpen = ref(false)
+const walletOpen = ref(false)
 
 onMounted(async () => {
   const el = document.getElementById('map')
@@ -80,6 +95,7 @@ onMounted(async () => {
   map = handles.map
   markers = handles.markers
   map.on('moveend', scheduleViewportSearch)
+  void nimiq.detect()
   await primeFromCache()
   void backgroundSync()
   locate()

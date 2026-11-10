@@ -18,7 +18,7 @@ export function resetProviderForTests(): void {
  */
 export function getProvider(): Promise<NimiqProvider> {
   if (!providerPromise) {
-    providerPromise = init().catch((err: unknown) => {
+    providerPromise = init({ timeout: 2000 }).catch((err: unknown) => {
       providerPromise = null
       throw new Error(
         'Nimiq Pay not detected. Open this Mini App inside Nimiq Pay to pay.',
