@@ -1,9 +1,15 @@
 <template>
   <div class="scrim" @click.self="$emit('close')" @keydown.escape="$emit('close')">
-    <section class="modal" role="dialog" aria-modal="true" aria-label="About this map">
+    <section class="modal" role="dialog" aria-modal="true" aria-label="About Zap Near Me">
       <div class="sheet-handle mobile-only" aria-hidden="true"></div>
-      <div class="row spread">
-        <h2>About this map</h2>
+      <div class="row spread brand-row">
+        <div class="brand-header">
+          <img src="/thumbnail-240.png" alt="Zap Near Me logo" class="brand-logo" width="44" height="44" />
+          <div>
+            <h2 class="brand-title">Zap Near Me</h2>
+            <span class="brand-subtitle">⚡ Nimiq Pay Mini App</span>
+          </div>
+        </div>
         <button class="icon-btn" @click="$emit('close')" aria-label="Close about panel">✕</button>
       </div>
       <p>

@@ -547,6 +547,42 @@ button, input, textarea {
   font-size: 1.2rem;
 }
 
+.brand-row {
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(229, 165, 10, 0.28);
+  border: 1px solid rgba(229, 165, 10, 0.4);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.brand-title {
+  margin: 0 !important;
+  font-size: 1.2rem !important;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand-subtitle {
+  font-size: 0.72rem;
+  color: var(--amber);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  display: block;
+}
+
 @media (min-width: 640px) {
   .scrim {
     align-items: center;
